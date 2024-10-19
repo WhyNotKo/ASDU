@@ -32,12 +32,21 @@ void cout_menu()
     
 }
 
-void second_menu(int& first, int& n)
+void second_menu_r(int& first, int& n)
 {
     std::cout << "Введите адрес первого регистра: " << std::endl;
     first = GetCorrectNumber(0);
     std::cout << "Введите кол-во регистров: " << std::endl;
     n = GetCorrectNumber(1);
+
+}
+template<typename data>
+void second_menu_w(int& first, data& n)
+{
+    std::cout << "Введите адреc регистра: " << std::endl;
+    first = GetCorrectNumber(0,32);
+    std::cout << "Введите Dанное: " << std::endl;
+    n = GetCorrectNumber(0,10000);
 
 }
 
@@ -84,27 +93,56 @@ int start()
         {
         case 1:
         {
-            uint8_t tab_reg_bit[32];
-            second_menu(first, n);
-            int k = modbus_read_bits(mb, first, n, tab_reg_bit);
-            if (k < 0)
+            std::cout << "Введите соответствующее значение:" << std::endl
+                << "1. Прочитать бит.\n"
+                << "2. Записать бит.\n"
+                << "0. Назад." << std::endl;
+            int rw = GetCorrectNumber(0, 3);
+            switch (rw)
             {
-                std::cout << "Ошибка..." << std::endl;
+            case 1:
+            {
+                uint8_t tab_reg_bit[32];
+                second_menu_r(first, n);
+                int k = modbus_read_bits(mb, first, n, tab_reg_bit);
+                if (k < 0)
+                {
+                    std::cout << "Ошибка..." << std::endl;
+                    break;
+                }
+
+                std::cout << "Результат:" << std::endl;
+                for (int i = first; i < first + k; i++)
+                {
+                    std::cout.width(3);
+                    std::cout << i << ".  " << int(tab_reg_bit[i]) << std::endl;
+                }
+                break;
+            }
+            case 2:
+            {
+                int addr = 0;
+                uint8_t data = 0;
+                second_menu_w(addr, data);
+                int k = modbus_write_bit(mb, addr, data);
+                if (k < 0)
+                {
+                    std::cout << "Ошибка..." << std::endl;
+                    break;
+                }
+            }
+            default:
                 break;
             }
 
-            std::cout << "Результат:" << std::endl;
-            for (int i = first; i < first+k; i++)
-            {
-                std::cout.width(3);
-                std::cout << i << ".  " << int(tab_reg_bit[i]) << std::endl;
-            }
+            break;
+            
         }
 
         case 2:
         {
             uint8_t tab_reg_bit[32];
-            second_menu(first, n);
+            second_menu_r(first, n);
             int k = modbus_read_input_bits(mb, first, n, tab_reg_bit);
             if (k < 0)
             {
@@ -123,27 +161,54 @@ int start()
 
         case 3:
         {
-            second_menu(first, n);
-            uint16_t tab_reg[32];
-            int k = modbus_read_registers(mb, first, n, tab_reg);
-            if (k < 0)
+            std::cout << "Введите соответствующее значение:" << std::endl
+                << "1. Прочитать регистр.\n"
+                << "2. Записать регистр.\n" 
+                << "0. Назад." << std::endl;
+            int rw = GetCorrectNumber(0,3);
+            switch (rw)
             {
-                std::cout << "Ошибка..." << std::endl;
+            case 1:
+            {
+                second_menu_r(first, n);
+                uint16_t tab_reg[32];
+                int k = modbus_read_registers(mb, first, n, tab_reg);
+                if (k < 0)
+                {
+                    std::cout << "Ошибка..." << std::endl;
+                    break;
+                }
+
+                std::cout << "Результат:" << std::endl;
+                for (int i = first; i < first + k; i++)
+                {
+                    std::cout.width(5);
+                    std::cout << i << ".  " << int(tab_reg[i]) << std::endl;
+                }
                 break;
             }
-
-            std::cout << "Результат:" << std::endl;
-            for (int i = first; i < first + k; i++)
+            case 2:
             {
-                std::cout.width(5);
-                std::cout << i << ".  " << int(tab_reg[i]) << std::endl;
+                int addr = 0;
+                uint16_t data = 0;
+                second_menu_w(addr, data);
+                int k = modbus_write_register(mb, addr, data);
+                if (k < 0)
+                {
+                    std::cout << "Ошибка..." << std::endl;
+                    break;
+                }
             }
+            default:
+                break;
+            }
+            
             break;
         }
 
         case 4:
         {
-            second_menu(first, n);
+            second_menu_r(first, n);
             uint16_t tab_reg[32];
             int k = modbus_read_input_registers(mb, first, n, tab_reg);
             if (k < 0)
@@ -161,6 +226,8 @@ int start()
             break;
         }
         default:
+            modbus_close(mb);
+            modbus_free(mb);
             return 0;
         }
     }
