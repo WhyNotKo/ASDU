@@ -46,7 +46,7 @@ void second_menu_w(int& first, data& n)
     std::cout << "Введите адреc регистра: " << std::endl;
     first = GetCorrectNumber(1,32)-1;
     std::cout << "Введите Dанное: " << std::endl;
-    n = GetCorrectNumber(0,10000);
+    n = GetCorrectNumber(0,65536);
 
 }
 
@@ -118,7 +118,7 @@ int start()
                 for (int i = first; i < first + k; i++)
                 {
                     std::cout.width(3);
-                    std::cout << i << ".  " << int(tab_reg_bit[i]) << std::endl;
+                    std::cout << i+1 << ".  " << int(tab_reg_bit[i]) << std::endl;
                 }
                 break;
             }
@@ -157,7 +157,7 @@ int start()
             for (int i = first; i < first + k; i++)
             {
                 std::cout.width(3);
-                std::cout << i << ".  " << int(tab_reg_bit[i]) << std::endl;
+                std::cout << i+1 << ".  " << int(tab_reg_bit[i]) << std::endl;
             }
             break;
         }
@@ -186,7 +186,7 @@ int start()
                 for (int i = first; i < first + k; i++)
                 {
                     std::cout.width(5);
-                    std::cout << i << ".  " << int(tab_reg[i]) << std::endl;
+                    std::cout << i+1 << ".  " << int(tab_reg[i]) << std::endl;
                 }
                 break;
             }
@@ -224,7 +224,7 @@ int start()
             for (int i = first; i < first + k; i++)
             {
                 std::cout.width(5);
-                std::cout << i << ".  " << int(tab_reg[i]) << std::endl;
+                std::cout << i+1 << ".  " << int(tab_reg[i]) << std::endl;
             }
             break;
         }
