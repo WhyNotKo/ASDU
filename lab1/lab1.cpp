@@ -44,7 +44,7 @@ template<typename data>
 void second_menu_w(int& first, data& n)
 {
     std::cout << "Введите адреc регистра: " << std::endl;
-    first = GetCorrectNumber(0,32);
+    first = GetCorrectNumber(1,32)-1;
     std::cout << "Введите Dанное: " << std::endl;
     n = GetCorrectNumber(0,10000);
 
@@ -65,11 +65,14 @@ int start()
 
     std::string ip;
     int port;
+    int slave;
 
     std::cout << "Введите адрес устройства (IP): ";
     std::cin >> ip;
     std::cout << "Введите номер порта: ";
     std::cin >> port;
+    std::cout << "Введите Id устройства(slave): ";
+    std::cin >> slave;
 
     modbus_t* mb = modbus_new_tcp(ip.c_str(), port);
     if (modbus_connect(mb) == -1) {
@@ -78,7 +81,7 @@ int start()
         return -1;
     }
 
-    modbus_set_slave(mb, 17);
+    modbus_set_slave(mb, slave);
 
     int first = 0;
     int n = 1;
