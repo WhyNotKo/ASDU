@@ -35,7 +35,7 @@ void cout_menu()
 void second_menu_r(int& first, int& n)
 {
     std::cout << "Введите адрес первого регистра: " << std::endl;
-    first = GetCorrectNumber(0);
+    first = GetCorrectNumber(1)-1;
     std::cout << "Введите кол-во регистров: " << std::endl;
     n = GetCorrectNumber(1);
 
